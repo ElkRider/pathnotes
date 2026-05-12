@@ -1,2 +1,2 @@
 # pathnotes
-individual blog 
+individual blog note
