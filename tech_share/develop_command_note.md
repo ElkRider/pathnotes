@@ -31,23 +31,74 @@ systemctl restart docker
 systemctl stop docker
 ```
 
-### 1.3、screen命令实现命令行的多命令行操作
+
+
+
+
+
+
+#### 1.3、常见的终端工具
 
 ```shell
- 1749  screen -h
- 1750  screen -ls
- 1751  screen -S wol
- 1764  screen -rD wol
+
+[screen] 终端复用功能最强
+查看有哪些会话在跑	          screen -ls
+重新连进去（只有一个会话时）	  screen -r
+重新连进去（有多个会话时）	   screen -r mytask
+强制连（会话状态异常时）	    screen -d -r mytask
+结束会话	                  进去后输入 exit 或按 Ctrl+D
+
+
+[tumx] 更加现代化的工具
+查看所有会话	           tmux ls
+重新连进去	            tmux attach -t mytask
+结束会话	             tmux kill-session -t mytask
+创建会话的同时给它起名	   tmux new -s mytask
+
+[nohup] 上古神器
+nohup 你的命令 &
+# 举例：运行 Python 脚本，并把输出存到 mylog.log
+nohup python train.py > mylog.log 2>&1 &
+
+---
+&	放到后台运行
+> 文件名	标准输出（正常日志）写到这个文件
+2>&1	错误信息也写到同一个文件（不然可能悄无声息地出错你都不知道）
+nohup	忽略挂断信号，关终端不会杀它
+---
+
+
 ```
 
-### 1.4、系统命令手册查看
+```shell
+
+│ 关掉终端后程序继续跑  
+│  【screen】                                                 │
+│  screen -S 名字       # 创建                                │
+│  Ctrl+A 然后 D        # 分离（关键！）                      │
+│  screen -r 名字       # 重连                                │
+│  screen -ls           # 查看所有                            │
+│                                                             │
+│  【tmux】                                                   │
+│  tmux new -s 名字     # 创建                                │
+│  Ctrl+B 然后 D        # 分离                                │
+│  tmux attach -t 名字  # 重连                                │
+│  tmux ls              # 查看                                │
+│                                                             │
+│  【nohup】（简单任务）                                       │
+│  nohup 命令 > 日志 2>&1 &                                   │
+│  tail -f 日志         # 查看输出                            │
+└─────────────────────────────────────────────────────────────┘
+```
+
+#### 1.4、系统命令手册查看
 
 ```shell
 man
 help
 ```
 
-### 1.5、常用的操作命令
+#### 1.5、常用的操作命令
 
 ```shell
 tar 
@@ -66,11 +117,30 @@ nano
 fdisk
 mount
 ln
+
+`find` 是一个非常强大的命令行工具，可以用来搜索文件和目录。以下是一些使用 `find` 查找大文件的例子：
+
+1. **查找某个目录下大于指定大小的文件**：
+   
+   例如，要在 `/var/log` 目录下查找大于 100MB 的文件，可以使用如下命令：
+   ```bash
+   find /var/log -type f -size +100M
+   ```
+   这里的 `+100M` 表示查找大小超过 100MB 的文件。你可以根据需要调整这个值。
+
+2. **查找并按大小排序**：
+
+   如果您想要找到目录下的所有文件并按大小排序，可以结合 `ls` 和 `sort` 命令使用：
+   ```bash
+   find /path/to/search -type f -exec ls -lhS {} +
+   ```
+   这个命令会列出指定路径下所有的文件，并按照文件大小从大到小排序。
+
 ```
 
 
 
-### 1.6、配合调试其他系统的命令
+#### 1.6、配合调试其他系统的命令
 
 ```shell
 adb
@@ -79,6 +149,66 @@ curl
 ping 
 tracert
 ```
+
+#### 1.7、linux的文件系统常见的命令
+
+~~~shell
+df 命令用于显示磁盘分区的使用情况，包括总容量、已用空间、可用空间和挂载点
+df -h
+-h 选项表示以人类可读的格式（如 MB 或 GB）显示磁盘使用情况。
+
+
+
+du 命令用于显示目录或文件的磁盘使用情况。
+du -sh /path/to/directory
+- -s 选项表示汇总总计。
+- -h 选项表示以人类可读的格式显示。
+
+
+
+lsblk 命令用于列出所有块设备的信息，包括磁盘和分区。
+
+
+
+``` shell
+NAME            MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+sda               8:0    0   50G  0 disk 
+├─sda1            8:1    0  500M  0 part /boot
+└─sda2            8:2    0 49.5G  0 part 
+  ├─centos-root 253:0    0   50G  0 lvm  /
+  └─centos-swap 253:1    0    2G  0 lvm  [SWAP]
+```
+
+fdisk  命令用于查看和管理磁盘分区。你可以使用 `-l` 选项来列出所有磁盘和分区的信息。
+
+
+fdisk -l
+
+
+```
+Disk /dev/sda: 50 GiB, 53687091200 bytes, 104857600 sectors
+Units: sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disklabel type: dos
+Disk identifier: 0x12345678
+
+Device     Boot  Start       End   Sectors  Size Id Type
+/dev/sda1  *      2048    1026047   1024000  500M 83 Linux
+/dev/sda2       1026048 104857599 103831552 49.5G 8e Linux LVM
+```
+~~~
+
+
+
+#### 1.8、vim常见使用
+
+```shell
+:%s\要替换的文本\替换后的文本
+注意这里的\在处理复杂文本可能会出现冲突
+```
+
+
 
 
 
@@ -100,10 +230,10 @@ docker stats <container_id_or_name>
 
 
 查看容器的进程
-使用 `docker top` 命令可以查看容器内的进程：
+使用 docker top 命令可以查看容器内的进程：
 
 查看容器的事件
-使用 `docker events` 命令可以实时查看 Docker 守护进程的事件：
+使用 docker events 命令可以实时查看 Docker 守护进程的事件：
 ```
 
 #### 2.2、export  all docker images
@@ -128,10 +258,10 @@ docker-compose --version
 #### 2.4、查看容器的日志
 
 ```shell
-使用 `docker logs` 命令可以查看容器的日志输出：
+使用 docker logs 命令可以查看容器的日志输出：
 
 查看容器的实时日志
-使用 `docker logs -f` 命令可以实时查看容器的日志输出：
+使用 docker logs -f 命令可以实时查看容器的日志输出：
 ```
 
 #### 2.5、查看 `my_container` 的详细信息：
