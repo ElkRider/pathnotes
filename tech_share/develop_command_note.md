@@ -125,7 +125,7 @@ ln
    例如，要在 `/var/log` 目录下查找大于 100MB 的文件，可以使用如下命令：
    ```bash
    find /var/log -type f -size +100M
-   ```
+```
    这里的 `+100M` 表示查找大小超过 100MB 的文件。你可以根据需要调整这个值。
 
 2. **查找并按大小排序**：
@@ -353,4 +353,24 @@ services:
 ```
 然后使用 `docker-compose up -d` 启动这些服务。
 ~~~
+
+#### 2.8、docker import image and export image
+
+```shell
+[root@localhost software_package]# h 10
+ 1005  docker ps
+ 1006  cd software_package/
+ 1008  docker load -i  dolphinscheduler-3.1.5.tar
+ 1009  docker images
+ 1010  docker images | grep dol
+ 1012  alias h='history'
+[root@localhost software_package]# docker images | grep dol
+apache/dolphinscheduler-standalone-server                          3.1.5         6c54b77c5811   19 months ago   925MB
+
+# 导入 apache/rocketmq:5.3.1
+docker load -i /path/to/destination/rocketmq-5.3.1.tar
+
+# 导入 apache/dolphinscheduler-standalone-server:3.1.5
+docker load -i /path/to/destination/dolphinscheduler-3.1.5.tar
+```
 
