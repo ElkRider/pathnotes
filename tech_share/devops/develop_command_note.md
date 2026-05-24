@@ -385,3 +385,19 @@ docker load -i /path/to/destination/rocketmq-5.3.1.tar
 docker load -i /path/to/destination/dolphinscheduler-3.1.5.tar
 ```
 
+
+
+
+
+
+
+## 三、windows 
+
+### 1、command  proxy setup
+
+refer:[【CMD、PowerShell和Bash设置代理】](https://jishuzhan.net/article/1866835108007251969)
+
+```
+win_operator
+```
+
