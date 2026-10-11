@@ -16,6 +16,7 @@ individual blog note repo.I will upgrade my blog website everweek synchronously.
 2. docs(tech_content):
 3. docs(jottings): some individual thought
 4. docs(struct adjust):
+5. docs(tech_content |todo):
 
 
 ```
