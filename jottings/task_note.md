@@ -14,7 +14,7 @@ tomorrow:
 
 ```
 todo:
-imgrate server from cento7.4 to ub
+imgrate server from cento7.4 to ubutun 26
 ```
 
 
